@@ -150,6 +150,7 @@ class BunkerMessenger {
   double position_x_ = 0.0;
   double position_y_ = 0.0;
   double theta_ = 0.0;
+  double theta_scaled_ = 0.0;
 
   rclcpp::Time last_time_;
   rclcpp::Time current_time_;
@@ -190,13 +191,15 @@ class BunkerMessenger {
     double d_x = linear_speed * std::cos(theta_) * dt;
     double d_y = linear_speed * std::sin(theta_) * dt;
     double d_theta = angular_speed * dt;
+    double d_theta_scaled = d_theta * 0.5;
 
     position_x_ += d_x;
     position_y_ += d_y;
     theta_ += d_theta;
+    theta_scaled_ += d_theta_scaled;
 
     geometry_msgs::msg::Quaternion odom_quat =
-        createQuaternionMsgFromYaw(theta_);
+        createQuaternionMsgFromYaw(theta_scaled_);
 
     // publish tf transformation
     geometry_msgs::msg::TransformStamped tf_msg;
